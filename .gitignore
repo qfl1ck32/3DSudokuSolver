@@ -1,0 +1,5 @@
+**/__pycache__/*
+data/solution/*
+**/*.pkl
+**/.DS_Store
+.vscode/
