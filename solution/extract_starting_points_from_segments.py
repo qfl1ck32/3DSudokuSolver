@@ -7,7 +7,7 @@ from packages.utility import get_current_function_name
 from solution.enums import SegmentType
 
 
-def extract_starting_points_from_segments(image: np.ndarray, type: SegmentType, segment_of_original_sizes: np.ndarray, vertical_segment_sizes: tuple = None):
+def extract_starting_points_from_segments(image: np.ndarray, segment_type: SegmentType, segment_of_original_sizes: np.ndarray, vertical_segment_sizes: tuple = None):
     debug = False
 
     if debug:
@@ -29,7 +29,8 @@ def extract_starting_points_from_segments(image: np.ndarray, type: SegmentType, 
 
         cv.drawContours(debug_image, contours, -1, (0, 0, 255), 2)
 
-        show_image(debug_image, f"{method_name} Contours, count: {len(contours)}")
+        show_image(
+            debug_image, f"{method_name} Contours, count: {len(contours)}")
 
     gray_bitwise_not_image = cv.cvtColor(
         gray_bitwise_not_image, cv.COLOR_GRAY2BGR)
@@ -39,7 +40,7 @@ def extract_starting_points_from_segments(image: np.ndarray, type: SegmentType, 
 
     height, width = segment_of_original_sizes.shape[:2]
 
-    if type == SegmentType.VERTICAL:
+    if segment_type == SegmentType.VERTICAL:
         for contour in contours:
             top = np.array(contour[contour[:, :, 1].argmin()][0])
             bottom = np.array(contour[contour[:, :, 1].argmax()][0])
@@ -72,9 +73,9 @@ def extract_starting_points_from_segments(image: np.ndarray, type: SegmentType, 
 
             number_of_lines = round(distance / struct_distance)
 
-            prev_point = bottom if type == SegmentType.SLASH else top
+            prev_point = bottom if segment_type == SegmentType.SLASH else top
 
-            sign = 1 if type == SegmentType.BACKSLASH else -1
+            sign = 1 if segment_type == SegmentType.BACKSLASH else -1
 
             m = np.tan(np.deg2rad(sign * 30))
 
